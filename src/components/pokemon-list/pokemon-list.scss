@@ -89,6 +89,7 @@ $cool-color: #7FD1B9;
 }
 
 .pokemon-card__btn {
+    font-family: 'Space Mono', monospace;
     border: 0;
     box-shadow: 0 none;
     color: #ffffff;
@@ -103,7 +104,6 @@ $cool-color: #7FD1B9;
     &:hover,
     &:focus {
         background-color: $dark-color;
-        // box-shadow: 0 0 5px 2px $dark-color;
     }
 
     &:active {

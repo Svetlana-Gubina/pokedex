@@ -55,15 +55,13 @@ $dark-color: #7A6563;
   body {
     @include indent();
     @include flex();
-    // justify-content: center;
     width: 100%;
     max-width: 100%;
     min-width: $mobile-width;
     color: $dark-color;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Space Mono', monospace;
     font-size: 0.8rem;
     line-height: 1.5;
-    // background-color: $dark-color;
   }
   
   img {
@@ -109,16 +107,17 @@ $dark-color: #7A6563;
   }
 
   .header__title {
+    font-family: 'Major Mono Display', monospace;
     color: #ffffff;
     background-color: $top-color;
     letter-spacing: 4px;
-    text-decoration: underline;
+    // text-decoration: underline;
     font-size: 20px;
-    font-weight: normal;
+    // font-weight: normal;
     @include indent();
     padding: 0.2em;
     margin-left: 10px;
-    font-style: italic;
+    // font-style: italic;
   }
 
   .page-main {
