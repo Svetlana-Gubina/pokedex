@@ -1,0 +1,134 @@
+// Variables
+$mobile-width: 320px;
+
+$tablet-width: 768px;
+
+$desktop-width: 1440px;
+
+$top-color: #E56399;
+
+$dark-color: #7A6563;
+
+
+// Media
+@mixin media-tablet {
+    @media screen and (max-width: $tablet-width) {
+      @content;
+    }
+  }
+  
+  @mixin media-desktop {
+    @media screen and (min-width:$desktop-width) {
+      @content;
+    }
+  }
+  
+  @mixin media-custom($width) {
+    @media (min-width: $width) {
+      @content;
+    }
+  }
+
+  // Mixins
+  @mixin indent() {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  @mixin flex() {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  @mixin list() {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+
+:root {
+    font-size: 16px;
+  }
+  
+  body {
+    @include indent();
+    @include flex();
+    // justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: $mobile-width;
+    color: $dark-color;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    // background-color: $dark-color;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .root-element {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .wrapper {
+    width: 100%;
+    max-width: 100%;
+    // height: auto;
+    @include indent();
+    @include flex();
+  }
+
+  .wrapper__inner {
+    @include indent();
+    // padding: 0 10px;
+    @include flex();
+    align-items: center;
+    width: 100%;
+    max-width: $desktop-width;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .header {
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+    @include flex();
+    background-color: $top-color;
+    margin-bottom: 40px;
+
+    & .wrapper__inner {
+        padding: 1% 5%;
+    }
+  }
+
+  .header__title {
+    color: #ffffff;
+    background-color: $top-color;
+    letter-spacing: 4px;
+    text-decoration: underline;
+    font-size: 20px;
+    font-weight: normal;
+    @include indent();
+    padding: 0.2em;
+    margin-left: 10px;
+    font-style: italic;
+  }
+
+  .page-main {
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+
+    & .wrapper__inner {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+  }
