@@ -77,14 +77,13 @@ $dark-color: #7A6563;
   .wrapper {
     width: 100%;
     max-width: 100%;
-    // height: auto;
+    height: auto;
     @include indent();
     @include flex();
   }
 
   .wrapper__inner {
     @include indent();
-    // padding: 0 10px;
     @include flex();
     align-items: center;
     width: 100%;
@@ -103,21 +102,74 @@ $dark-color: #7A6563;
 
     & .wrapper__inner {
         padding: 1% 5%;
+        justify-content: space-between;
+        align-items: center;
+    }
+  }
+
+  .header__link-logo {
+    @include indent();
+    @include flex();
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      opacity: 0.5;
+    }
+
+    &:active {
+        opacity: 0.8;
     }
   }
 
   .header__title {
     font-family: 'Major Mono Display', monospace;
     color: #ffffff;
-    background-color: $top-color;
     letter-spacing: 4px;
-    // text-decoration: underline;
     font-size: 20px;
-    // font-weight: normal;
     @include indent();
     padding: 0.2em;
     margin-left: 10px;
-    // font-style: italic;
+  }
+
+  .header__nav {
+    @include indent();
+    @include flex();
+  }
+
+  .header__nav-list {
+    @include indent();
+    @include flex();
+    @include list();
+  }
+
+  .header__nav-item {
+    @include indent();
+    @include flex();
+  }
+
+  .header__nav-link {
+    text-decoration: none;
+    color: #ffffff;
+    cursor: pointer;
+    @include indent();
+    padding: 0.5em;
+    font-size: 16px;
+
+    &:hover,
+    &:focus {
+      opacity: 0.5;
+    }
+
+    &:active {
+        opacity: 0.8;
+    }
+
+    @include media-tablet() {
+      font-size: 14px;
+    }
   }
 
   .page-main {
@@ -130,4 +182,10 @@ $dark-color: #7A6563;
         justify-content: center;
         align-items: center;
     }
+  }
+
+  .page-main__empty {
+    text-align: center;
+    @include indent();
+    padding: 0.5em;
   }

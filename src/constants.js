@@ -3,5 +3,5 @@ export const AppRoute = {
     // LOGOUT: `/logout`,
     ROOT: `/`,
     POKEMON: `/pokemon/:id`,
-    CATCHED: `/catched`,
+    CAUGHT: `/caught`,
 };

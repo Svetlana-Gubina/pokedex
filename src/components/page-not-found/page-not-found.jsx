@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import './page-not-found.scss';
 
 const PageNotFound = () => {
@@ -46,7 +47,9 @@ const PageNotFound = () => {
           </g>
         </svg>
         <div className="main__inner">
-          <a href="/" className="main__link">Back home</a>
+          <Link to="/" className="main__link">
+            Back home
+          </Link>
         </div>
       </div>
     )

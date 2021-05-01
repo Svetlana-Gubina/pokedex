@@ -1,3 +1,52 @@
+// Variables
+$mobile-width: 320px;
+
+$tablet-width: 768px;
+
+$desktop-width: 1440px;
+
+$top-color: #E56399;
+
+$dark-color: #7A6563;
+
+
+// Media
+@mixin media-tablet {
+    @media screen and (max-width: $tablet-width) {
+      @content;
+    }
+  }
+  
+  @mixin media-desktop {
+    @media screen and (min-width:$desktop-width) {
+      @content;
+    }
+  }
+  
+  @mixin media-custom($width) {
+    @media (min-width: $width) {
+      @content;
+    }
+  }
+
+  // Mixins
+  @mixin indent() {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  @mixin flex() {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  @mixin list() {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
 .visually-hidden:not(:focus):not(:active),
 input[type="checkbox"].visually-hidden,
 input[type="radio"].visually-hidden {
@@ -14,20 +63,81 @@ input[type="radio"].visually-hidden {
 }
 
 .pokemon__info {
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+    padding: 10%;
+    @include flex();
+    flex-direction: column;
+    align-items: center;
+}
 
+.pokemon__info-container {
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+    // padding: 0 50px;
+    margin-bottom: 20px;
+    @include flex();
+    align-items: center;
+
+    @include media-tablet() {
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 .pokemon__info-img {
+    width: 260px;
+    height: 200px;
+    margin-right: 15%;
 
+    @include media-tablet() {
+        flex-direction: column;
+        margin-right: 0;
+        margin-bottom: 20px;
+        width: 160px;
+        height: 100px;
+    }
 }
 
-.pokemon__info-id {
-
+.pokemon__info-inner {
+    @include indent();
+    @include flex();
+    flex-direction: column;
+    align-items: center;
 }
+
+.pokemon__info-id,
 .pokemon__info-name {
+    @include indent();
+    @include flex();
+    align-items: center;
+    font-size: 18px;
 
+    & span {
+        @include indent();
+        padding: 0.5em;
+    }
+
+    & .pokemon__info-label {
+        font-weight: 700;
+        margin-right: 10px;
+    }
+
+    @include media-tablet() {
+        font-size: 16px;
+    }
 }
 
 .pokemon__info-footer {
-    
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+    box-shadow: 0 0 5px 0 $top-color;
+    border-radius: 10px;
+    padding: 10%;
+    @include flex();
+    justify-content: center;
+    align-items: center;
 }

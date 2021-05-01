@@ -1,0 +1,65 @@
+// Variables
+$mobile-width: 320px;
+
+$tablet-width: 768px;
+
+$desktop-width: 1440px;
+
+$top-color: #E56399;
+
+$dark-color: #7A6563;
+
+$cool-color: #7FD1B9;
+
+// Media
+@mixin media-tablet {
+    @media screen and (max-width: $tablet-width) {
+      @content;
+    }
+}
+  
+@mixin media-desktop {
+  @media screen and (min-width:$desktop-width) {
+    @content;
+  }
+}
+
+@mixin media-custom($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+// Mixins
+@mixin indent() {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+  
+@mixin flex() {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@mixin list() {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// main
+
+.pokemon-caught {
+    width: 100%;
+    max-width: 100%;
+    @include indent();
+    padding: 10px;
+}
+
+.pokemon-caught__title {
+    text-align: center;
+    color: $cool-color;
+    @include indent();
+    margin-bottom: 10px;
+    padding: 0.2em;
+}
