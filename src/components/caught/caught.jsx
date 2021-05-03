@@ -1,12 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
+import {getCaughtPokemons} from '../../utils';
 // import Pagination from '../../pagination/pagination';
 import './caught.scss';
 
 const Caught = (props) => {
-    const {pokemon} = props;
+    const {pokemons} = props;
+    const caughtPokemons = getCaughtPokemons(pokemons);
+    // console.log(caughtPokemons);
 
     return (
         <div className="wrapper">
@@ -29,7 +33,10 @@ const Caught = (props) => {
             <div className="wrapper__inner">
             <div className="pokemon-caught">
             <h2 className="pokemon-caught__title">My pokemons:</h2>
-              <PokemonList pokemon={pokemon} />
+              {caughtPokemons.length ? <PokemonList pokemons={caughtPokemons} /> : 
+              <div className="page-main__pokemon-empty">
+                You haven't caught any pokemon yet.
+              </div>}
             </div>
             </div>
           </main>
@@ -37,4 +44,10 @@ const Caught = (props) => {
     );
 };
 
-export default Caught;
+const mapStateToProps = (state) => ({
+  pokemons: state.pokemons,
+});
+
+
+export {Caught};
+export default connect(mapStateToProps, null)(Caught);

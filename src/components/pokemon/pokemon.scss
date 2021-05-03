@@ -9,6 +9,8 @@ $top-color: #E56399;
 
 $dark-color: #7A6563;
 
+$cool-color: #7FD1B9;
+
 
 // Media
 @mixin media-tablet {
@@ -105,7 +107,6 @@ input[type="radio"].visually-hidden {
     @include indent();
     @include flex();
     flex-direction: column;
-    align-items: center;
 }
 
 .pokemon__info-id,
@@ -134,7 +135,7 @@ input[type="radio"].visually-hidden {
     width: 100%;
     max-width: 100%;
     @include indent();
-    box-shadow: 0 0 5px 0 $top-color;
+    box-shadow: 0 0 5px 0 $cool-color;
     border-radius: 10px;
     padding: 10%;
     @include flex();

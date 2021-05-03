@@ -189,3 +189,9 @@ $dark-color: #7A6563;
     @include indent();
     padding: 0.5em;
   }
+
+  .page-main__pokemon-empty {
+    text-align: center;
+    @include indent();
+    padding: 1em;
+  }

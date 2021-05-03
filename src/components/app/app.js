@@ -8,31 +8,13 @@ import PageNotFound from '../page-not-found/page-not-found';
 import {AppRoute} from '../../constants';
 import './app.scss';
 
-const data = [
-  {
-    "name": "bulbasaur",
-    "id": 1
-  },
-  {
-    "name": "ivysaur",
-    "id": 2
-  },
-  {
-    "name": "venusaur",
-    "id": 3
-  }
-];
 
 const App = () => {
   return (
     <Switch>
-      <Route exact path={AppRoute.ROOT}>
-        <MainPage data={data}  />
-      </Route>
+      <Route exact path={AppRoute.ROOT} component={MainPage} />
       <Route exact path={AppRoute.POKEMON} component={Pokemon} />
-      <Route exact path={AppRoute.CAUGHT}>
-        <Caught pokemon={data} />
-      </Route>
+      <Route exact path={AppRoute.CAUGHT} component={Caught} />
       <Route component={PageNotFound} />
     </Switch>
   );

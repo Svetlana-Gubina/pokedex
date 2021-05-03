@@ -1,11 +1,16 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
+import {connect} from 'react-redux';
 import dayjs from 'dayjs';
 import UserNav from '../user-nav/user-nav';
+import {getPokemonById} from '../../utils';
+import LoadingScreen from '../loading-screen/loading-screen';
 import './pokemon.scss';
 
 const Pokemon = (props) => {
-    const {id, imgSrc, name, isСaught, date} = props;
+  const {pokemons} = props;
+  let {id} = useParams();
+
 
     return (
         <div className="wrapper">
@@ -30,10 +35,10 @@ const Pokemon = (props) => {
                 <h2 className="visually-hidden">Pokemon Info</h2>
                 <div className="pokemon__info-container">
                     <img className="pokemon__info-img"
-                            src={imgSrc}
+                            src={`img/${id}.png`}
                             width="260"
                             height="200"
-                            alt={name}
+                            alt={pokemon.name}
                           />
                     <div className="pokemon__info-inner">
                         <p className="pokemon__info-id">
@@ -42,12 +47,12 @@ const Pokemon = (props) => {
                         </p>       
                         <p className="pokemon__info-name">
                             <span className="pokemon__info-label">Name:</span>
-                            <span>{name}</span>
+                            <span>{pokemon.name}</span>
                         </p>
                     </div>
                 </div>      
                 <div className="pokemon__info-footer">
-                    <p>{isСaught ? `Not caught` : `Сaught: ${dayjs(date).format(`MMMM YYYY`)}`}</p>
+                <p>{pokemon.isСaught ? `Сaught: ${dayjs(pokemon.captureDate).format(`MMMM YYYY`)}` : `Not caught`}</p>
                 </div>    
 
               </section>
@@ -57,4 +62,9 @@ const Pokemon = (props) => {
       );
 };
 
-export default Pokemon;
+const mapStateToProps = (state) => ({
+  pokemons: state.pokemons,
+});
+
+export {Pokemon};
+export default connect(mapStateToProps, null)(Pokemon);

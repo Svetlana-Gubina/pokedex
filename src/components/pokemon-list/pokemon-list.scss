@@ -90,6 +90,10 @@ input[type="radio"].visually-hidden {
     height: 260px;
 }
 
+.pokemon-card__caught {
+  box-shadow: 0 0 7px 3px rgba(0, 0, 0, 0.1);
+}
+
 .pokemon-card__name {
     text-transform: capitalize;
     overflow: hidden;
@@ -103,9 +107,9 @@ input[type="radio"].visually-hidden {
 .pokemon-card__link {
     border-radius: 20px;
 
-    &:hover,
-    &:focus {
-      background-color: $light-color;
+    &:hover img,
+    &:focus img {
+      transform: scale(1.3);
     }
 
     &:active {
@@ -140,6 +144,7 @@ input[type="radio"].visually-hidden {
     }
 
     &:disabled {
-        opacity: 0.5;
+      background-color: $dark-color;
+      opacity: 0.5;
     }
 }

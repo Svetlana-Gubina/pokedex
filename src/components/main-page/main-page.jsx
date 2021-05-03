@@ -1,47 +1,55 @@
 import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import {connect} from 'react-redux';
 import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
+import LoadingScreen from '../loading-screen/loading-screen';
+import {ActionCreator} from '../../store/action';
 // import Pagination from '../../pagination/pagination';
-import axios from 'axios';
 // import './app.scss';
 
 const MainPage = (props) => {
-    const {data} = props;
-    // console.log(data);
-    const [pokemon, setPokemon] = useState([]);
-    const [currentPageUrl, setCurrentPageUrl] = useState(`http://localhost:3004/pokemons?_limit=20`);
-    const [prevPageUrl, setPrevPageUrl] = useState();
-    const [nextPageUrl, setNextPageUrl] = useState();
-    const [loading, setLoading] = useState(true);
+    const {pokemons, isDataLoaded, loadPokemons} = props;
+    const pokemonsToRender = pokemons.slice(0, 20);
+    const url = `http://localhost:3004/pokemons`;
+    // const [prevPageUrl, setPrevPageUrl] = useState();
+    // const [nextPageUrl, setNextPageUrl] = useState();
+    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
-        let cancel;
-        axios.get(currentPageUrl, {
-          cancelToken: new axios.CancelToken((c) => cancel = c)
-        })
-        .then((res) => {
-          setLoading(false);
-    
-          // setPrevPageUrl(res.data.previous);
-          // setNextPageUrl(res.data.next);
-          // setPokemon(res.data.map((p) => p));
-        });
-    
-        return () => cancel();
-      }, [currentPageUrl]);
+        // setLoading(true);
 
-      if(loading) {
-        return <div>Loading...</div>;
+        let cancel;
+
+        if(!isDataLoaded) {
+          axios.get(url, {
+            cancelToken: new axios.CancelToken((c) => cancel = c)
+          })
+          .then((res) => {
+            // setLoading(false);
+            loadPokemons(res.data);
+            // setPrevPageUrl(res.data.previous);
+            // setNextPageUrl(res.data.next);
+            // setPokemon(res.data.map((p) => p));
+          });
+        }
+    
+        // return () => cancel();
+      }, [url, isDataLoaded, loadPokemons]);
+
+      if (!isDataLoaded) {
+        return (
+          <LoadingScreen />
+        );
       }
     
-      function goToNextPage () {
-        setCurrentPageUrl(nextPageUrl);
-      }
+      // function goToNextPage () {
+        // setCurrentPageUrl(nextPageUrl);
+      // }
     
-      function goToPrevPage () {
-        setCurrentPageUrl(prevPageUrl);
-      }
+      // function goToPrevPage () {
+        // setCurrentPageUrl(prevPageUrl);
+      // }
 
     return (
     <div className="wrapper">
@@ -62,12 +70,26 @@ const MainPage = (props) => {
       </header>
       <main className="page-main">
         <div className="wrapper__inner">
-          <PokemonList pokemon={data} />
+          <PokemonList pokemons={pokemonsToRender} />
         </div>
       </main>
     </div>
   );
 };
 
-export default MainPage;
+const mapStateToProps = (state) => ({
+  pokemons: state.pokemons,
+  isDataLoaded: state.isDataLoaded
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  loadPokemons(data) {
+    dispatch(ActionCreator.loadPokemons(data));
+  },
+});
+
+
+
+export {MainPage};
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
 
