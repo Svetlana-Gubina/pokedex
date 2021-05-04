@@ -1,15 +1,56 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import {connect} from 'react-redux';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import UserNav from '../user-nav/user-nav';
-import {getPokemonById} from '../../utils';
 import LoadingScreen from '../loading-screen/loading-screen';
 import './pokemon.scss';
 
-const Pokemon = (props) => {
-  const {pokemons} = props;
+const Pokemon = () => {
   let {id} = useParams();
+  const url = `http://localhost:3004/pokemons/${id}`;
+
+  const [isCaught, setIsCaught] =  useState(false);
+  const [captureDate, setCaptureDate] =  useState(``);
+
+  const [pokemon, setPokemon] = useState(null);
+  let specialFooterClass = pokemon && isCaught ? `pokemon__info-footer-caught` : ``;
+  // let specialFooterClass = pokemon && pokemon.isCaught ? `pokemon__info-footer-caught` : ``;
+
+  // localStorage
+  
+  useEffect(() => {
+    if (localStorage.getItem('my_pokemons')) {
+      const caughtPokemons = JSON.parse(localStorage.getItem('my_pokemons'));
+      let elem = caughtPokemons.find((elem) => elem.id === Number(id));
+      if(elem) {
+        setIsCaught(true);
+        setCaptureDate(elem.captureDate);
+      }
+    }
+  }, [id]);
+
+  useEffect(() => {
+    let cancel;
+    axios.get(url, {
+      cancelToken: new axios.CancelToken((c) => cancel = c)
+    })
+    .then((res) => {
+      setPokemon(res.data);
+    })
+    .catch(() => {
+      throw new Error(`Error!`);
+    });
+
+    return () => cancel();
+  }, [url]);
+
+  if (!pokemon) {
+    return (
+      <LoadingScreen />
+    );
+  }
+
 
 
     return (
@@ -35,9 +76,9 @@ const Pokemon = (props) => {
                 <h2 className="visually-hidden">Pokemon Info</h2>
                 <div className="pokemon__info-container">
                     <img className="pokemon__info-img"
-                            src={`img/${id}.png`}
-                            width="260"
-                            height="200"
+                            src={`../img/${pokemon.id}.png`}
+                            width="250"
+                            height="250"
                             alt={pokemon.name}
                           />
                     <div className="pokemon__info-inner">
@@ -51,8 +92,9 @@ const Pokemon = (props) => {
                         </p>
                     </div>
                 </div>      
-                <div className="pokemon__info-footer">
-                <p>{pokemon.isСaught ? `Сaught: ${dayjs(pokemon.captureDate).format(`MMMM YYYY`)}` : `Not caught`}</p>
+                <div className={`${specialFooterClass} pokemon__info-footer`}>
+                  <p>{isCaught ? `Сaught: ${dayjs(captureDate).format(`MMMM YYYY`)}` : `Not caught`}</p>
+                  {/* <p>{pokemon.isСaught ? `Сaught: ${dayjs(pokemon.captureDate).format(`MMMM YYYY`)}` : `Not caught`}</p> */}
                 </div>    
 
               </section>
@@ -62,9 +104,5 @@ const Pokemon = (props) => {
       );
 };
 
-const mapStateToProps = (state) => ({
-  pokemons: state.pokemons,
-});
 
-export {Pokemon};
-export default connect(mapStateToProps, null)(Pokemon);
+export default Pokemon;

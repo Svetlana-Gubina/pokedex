@@ -3,14 +3,21 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
-import {getCaughtPokemons} from '../../utils';
+// import {getCaughtPokemons} from '../../utils';
 // import Pagination from '../../pagination/pagination';
 import './caught.scss';
 
 const Caught = (props) => {
-    const {pokemons} = props;
-    const caughtPokemons = getCaughtPokemons(pokemons);
+    // const {pokemons} = props;
+    // const caughtPokemons = getCaughtPokemons(pokemons);
     // console.log(caughtPokemons);
+    const caughtClass = `pokemon-list__my_pokemons`;
+
+    // localStorage
+    let caughtPokemons = [];
+    if(localStorage.getItem('my_pokemons')) {
+      caughtPokemons = JSON.parse(localStorage.getItem('my_pokemons'));
+    }
 
     return (
         <div className="wrapper">
@@ -33,7 +40,7 @@ const Caught = (props) => {
             <div className="wrapper__inner">
             <div className="pokemon-caught">
             <h2 className="pokemon-caught__title">My pokemons:</h2>
-              {caughtPokemons.length ? <PokemonList pokemons={caughtPokemons} /> : 
+              {caughtPokemons.length ? <PokemonList pokemons={caughtPokemons} caughtClass={caughtClass} /> : 
               <div className="page-main__pokemon-empty">
                 You haven't caught any pokemon yet.
               </div>}

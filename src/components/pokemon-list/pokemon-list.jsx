@@ -3,7 +3,7 @@ import Card from '../card/card';
 import './pokemon-list.scss';
 
 const PokemonList = (props) => {
-    const {pokemons} = props;
+    const {pokemons, caughtClass = ``} = props;
 
     return (
         <section className="pokemon-list">
@@ -11,7 +11,8 @@ const PokemonList = (props) => {
             {pokemons.map((p) => <Card 
                                    key={p.id} 
                                    name={p.name} 
-                                   id={p.id} />)}
+                                   id={p.id}
+                                   caughtClass={caughtClass} />)}
         </section>
     );
 };

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
 import LoadingScreen from '../loading-screen/loading-screen';
+import MainEmpty from '../main-empty/main-empty';
 import {ActionCreator} from '../../store/action';
 // import Pagination from '../../pagination/pagination';
 // import './app.scss';
@@ -14,16 +15,14 @@ const MainPage = (props) => {
     const url = `http://localhost:3004/pokemons`;
     // const [prevPageUrl, setPrevPageUrl] = useState();
     // const [nextPageUrl, setNextPageUrl] = useState();
-    // const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState(false);
+    
     useEffect(() => {
         // setLoading(true);
-
-        let cancel;
-
+        const cancelTokenSource = axios.CancelToken.source();
         if(!isDataLoaded) {
           axios.get(url, {
-            cancelToken: new axios.CancelToken((c) => cancel = c)
+            cancelToken: cancelTokenSource.token
           })
           .then((res) => {
             // setLoading(false);
@@ -31,17 +30,40 @@ const MainPage = (props) => {
             // setPrevPageUrl(res.data.previous);
             // setNextPageUrl(res.data.next);
             // setPokemon(res.data.map((p) => p));
+          })
+          .catch((error) => {
+            setError(true);
+            // if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            // console.log(error.response.data);
+            // console.log(error.response.status);
+            // } else if (error.request) {
+            // The request was made but no response was received
+            // setError(true);
+            // } else {
+            // Something happened in setting up the request that triggered an Error
+            // console.log('Error', error.message);
+            // }
           });
         }
     
-        // return () => cancel();
+        return () => cancelTokenSource.cancel();
       }, [url, isDataLoaded, loadPokemons]);
 
-      if (!isDataLoaded) {
+      if (!isDataLoaded && !error) {
         return (
           <LoadingScreen />
         );
       }
+
+      if (error) {
+        console.log('Oops!');
+        return (
+          <MainEmpty />
+        );
+      }
+
     
       // function goToNextPage () {
         // setCurrentPageUrl(nextPageUrl);

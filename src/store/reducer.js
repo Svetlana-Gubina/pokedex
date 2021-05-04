@@ -1,5 +1,5 @@
 import {ActionType} from './action';
-import {updatePokemons, getPokemonById} from '../utils';
+// import {updatePokemons} from '../utils';
 
 const initialState = {
     pokemons: [],
@@ -16,11 +16,11 @@ const reducer = (state = initialState, action) => {
           isDataLoaded: true,
         };
   
-      case ActionType.CHANGE_POKEMON_STATE:
-        return {
-          ...state,
-          pokemons: updatePokemons(state.pokemons, action.payload),
-        };
+      // case ActionType.CHANGE_POKEMON_STATE:
+        // return {
+          // ...state,
+          // pokemons: updatePokemons(state.pokemons, action.payload),
+        // };
 
       // case ActionType.ADD_POKEMON_TO_CAUGHT:
         // return {
