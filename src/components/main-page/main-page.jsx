@@ -1,77 +1,73 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
+// import axios from 'axios';
+import {v4 as uuidv4} from 'uuid';
 import {connect} from 'react-redux';
-import PokemonList from '../pokemon-list/pokemon-list';
+import {Link} from "react-router-dom";
+// import PokemonList from '../pokemon-list/pokemon-list';
+// import Card from '../card/card';
 import UserNav from '../user-nav/user-nav';
 import LoadingScreen from '../loading-screen/loading-screen';
 import MainEmpty from '../main-empty/main-empty';
+// import Pagination from '../pagination/pagination';
 import {ActionCreator} from '../../store/action';
-// import Pagination from '../../pagination/pagination';
+// import {LIMIT} from '../../constants';
+import useScrollPagination from '../../useScrollPagination';
 // import './app.scss';
 
 const MainPage = (props) => {
-    const {pokemons, isDataLoaded, loadPokemons} = props;
-    const pokemonsToRender = pokemons.slice(0, 20);
-    const url = `http://localhost:3004/pokemons`;
+    const {$pokemons, isDataLoaded, loadPokemons} = props;
+    // const url = `http://localhost:3004/pokemons`;
+    const [pageNumber, setPageNumber] = useState(1);
     // const [prevPageUrl, setPrevPageUrl] = useState();
     // const [nextPageUrl, setNextPageUrl] = useState();
-    const [error, setError] = useState(false);
+    // const [error, setError] = useState(false);
+
+    // const [pokemonsToRender, setPokemonsToRender] = useState([]);
+    // console.log(pokemonsToRender);
+
     
-    useEffect(() => {
-        // setLoading(true);
-        const cancelTokenSource = axios.CancelToken.source();
-        if(!isDataLoaded) {
-          axios.get(url, {
-            cancelToken: cancelTokenSource.token
-          })
-          .then((res) => {
-            // setLoading(false);
-            loadPokemons(res.data);
-            // setPrevPageUrl(res.data.previous);
-            // setNextPageUrl(res.data.next);
-            // setPokemon(res.data.map((p) => p));
-          })
-          .catch((error) => {
-            setError(true);
-            // if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            // console.log(error.response.data);
-            // console.log(error.response.status);
-            // } else if (error.request) {
-            // The request was made but no response was received
-            // setError(true);
-            // } else {
-            // Something happened in setting up the request that triggered an Error
-            // console.log('Error', error.message);
-            // }
-          });
+    const {error, hasMore, loading, pokemons} = useScrollPagination(pageNumber);
+    console.log('pokemons ' + pokemons.map((p) => p.id));
+
+    const observer = useRef();
+    const lastPokemonRef = useCallback((node) => {
+      if(loading) {
+        return
+      }
+      if(observer.current) {
+        observer.current.disconnect();
+      }
+      observer.current = new IntersectionObserver((entries) => {
+        if(entries[0].isIntersecting && hasMore) {
+          console.log('visible');
+          setPageNumber((previousPageNumber) => previousPageNumber + 1);
         }
-    
-        return () => cancelTokenSource.cancel();
-      }, [url, isDataLoaded, loadPokemons]);
-
-      if (!isDataLoaded && !error) {
-        return (
-          <LoadingScreen />
-        );
+      });
+      if(node) {
+        observer.current.observe(node);
       }
+      console.log(node);
+    }, [loading, hasMore]);
 
-      if (error) {
-        console.log('Oops!');
-        return (
-          <MainEmpty />
-        );
+
+    if (loading && !error) {
+      return (
+         <LoadingScreen />
+      );
+    }
+
+    if (error) {
+      console.log('Oops!');
+      return (
+        <MainEmpty />
+      );
+    }
+
+      const caughtClass = '';
+
+      function handlePokemonCatch () {
+        console.log('prev');
       }
-
-    
-      // function goToNextPage () {
-        // setCurrentPageUrl(nextPageUrl);
-      // }
-    
-      // function goToPrevPage () {
-        // setCurrentPageUrl(prevPageUrl);
-      // }
 
     return (
     <div className="wrapper">
@@ -92,7 +88,47 @@ const MainPage = (props) => {
       </header>
       <main className="page-main">
         <div className="wrapper__inner">
-          <PokemonList pokemons={pokemonsToRender} />
+          {/* <PokemonList pokemons={pokemons} /> */}
+          <section className="pokemon-list">
+            <h2 className="visually-hidden">Pokemon list</h2>
+            {pokemons.map((p, index) =>
+            pokemons.length === index + 1 ? 
+            <div key={uuidv4()} ref={lastPokemonRef} className={`${p.isCaught ? `pokemon-card__caught` : ``} pokemon-card`}>
+            <Link to={`/pokemon/${p.id}`} className="pokemon-card__link">
+            <img className="pokemon-card__img"
+                        src={`img/${p.id}.png`}
+                        width="100"
+                        height="40"
+                        alt={p.name}
+                      />
+            </Link>
+            <p className="pokemon-card__name">{p.name}</p>
+            {caughtClass ? `` : <button
+            className="pokemon-card__btn"
+            type="button"
+            onClick={() => handlePokemonCatch()}
+            disabled={p.isCaught}
+          >Catch</button>}
+          </div> : 
+          <div key={uuidv4()} className={`${p.isCaught ? `pokemon-card__caught` : ``} pokemon-card`}>
+            <Link to={`/pokemon/${p.id}`} className="pokemon-card__link">
+            <img className="pokemon-card__img"
+                        src={`img/${p.id}.png`}
+                        width="100"
+                        height="40"
+                        alt={p.name}
+                      />
+            </Link>
+            <p className="pokemon-card__name">{p.name}</p>
+            {caughtClass ? `` : <button
+            className="pokemon-card__btn"
+            type="button"
+            onClick={() => handlePokemonCatch()}
+            disabled={p.isCaught}
+          >Catch</button>}
+          </div>
+             )}
+          </section>
         </div>
       </main>
     </div>

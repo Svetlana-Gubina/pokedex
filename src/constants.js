@@ -5,3 +5,5 @@ export const AppRoute = {
     POKEMON: `/pokemon/:id`,
     CAUGHT: `/caught`,
 };
+
+export const LIMIT = 20;
