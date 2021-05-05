@@ -1,19 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
 import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
-// import {getCaughtPokemons} from '../../utils';
-// import Pagination from '../../pagination/pagination';
 import './caught.scss';
 
-const Caught = (props) => {
-    // const {pokemons} = props;
-    // const caughtPokemons = getCaughtPokemons(pokemons);
-    // console.log(caughtPokemons);
+const Caught = () => {
     const caughtClass = `pokemon-list__my_pokemons`;
 
-    // localStorage
     let caughtPokemons = [];
     if(localStorage.getItem('my_pokemons')) {
       caughtPokemons = JSON.parse(localStorage.getItem('my_pokemons'));
@@ -51,10 +44,4 @@ const Caught = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-  pokemons: state.pokemons,
-});
-
-
-export {Caught};
-export default connect(mapStateToProps, null)(Caught);
+export default Caught;

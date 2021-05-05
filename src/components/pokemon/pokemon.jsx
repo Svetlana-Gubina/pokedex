@@ -15,9 +15,7 @@ const Pokemon = () => {
 
   const [pokemon, setPokemon] = useState(null);
   let specialFooterClass = pokemon && isCaught ? `pokemon__info-footer-caught` : ``;
-  // let specialFooterClass = pokemon && pokemon.isCaught ? `pokemon__info-footer-caught` : ``;
-
-  // localStorage
+ 
   
   useEffect(() => {
     if (localStorage.getItem('my_pokemons')) {

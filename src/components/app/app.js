@@ -3,7 +3,6 @@ import {Route, Switch} from "react-router-dom";
 import MainPage from '../main-page/main-page';
 import Pokemon from '../pokemon/pokemon';
 import Caught from '../caught/caught';
-// import MainEmpty from '../main-empty/main-empty';
 import PageNotFound from '../page-not-found/page-not-found';
 import {AppRoute} from '../../constants';
 import './app.scss';

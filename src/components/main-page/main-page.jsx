@@ -1,72 +1,87 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
-// import axios from 'axios';
-import {v4 as uuidv4} from 'uuid';
-import {connect} from 'react-redux';
-import {Link} from "react-router-dom";
-// import PokemonList from '../pokemon-list/pokemon-list';
-// import Card from '../card/card';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import PokemonList from '../pokemon-list/pokemon-list';
 import UserNav from '../user-nav/user-nav';
 import LoadingScreen from '../loading-screen/loading-screen';
 import MainEmpty from '../main-empty/main-empty';
-// import Pagination from '../pagination/pagination';
+import Pagination from '../pagination/pagination';
+import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/action';
-// import {LIMIT} from '../../constants';
-import useScrollPagination from '../../useScrollPagination';
-// import './app.scss';
+import {LIMIT} from '../../constants';
+
 
 const MainPage = (props) => {
-    const {$pokemons, isDataLoaded, loadPokemons} = props;
-    // const url = `http://localhost:3004/pokemons`;
+    const {pokemons, isDataLoaded, loadPokemons} = props;
     const [pageNumber, setPageNumber] = useState(1);
-    // const [prevPageUrl, setPrevPageUrl] = useState();
-    // const [nextPageUrl, setNextPageUrl] = useState();
-    // const [error, setError] = useState(false);
+    const [error, setError] = useState(false);
+    const [apiError, setApiError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isLastPage, setIsLastPage] = useState(false);
+    const [pokemonsToRender, setPokemonsToRender] = useState([]);
 
-    // const [pokemonsToRender, setPokemonsToRender] = useState([]);
-    // console.log(pokemonsToRender);
-
+   
+    useEffect(() => {
+      const url = `http://localhost:3004/pokemons`;
+      const cancelTokenSource = axios.CancelToken.source();
+      if(!isDataLoaded) {
+        axios.get(url, {
+          cancelToken: cancelTokenSource.token
+        })
+        .then((res) => {
+          loadPokemons(res.data);
+        })
+        .catch(() => {
+          setApiError(true);
+        });
+      }
+  
+      return () => cancelTokenSource.cancel();
+    }, [isDataLoaded, loadPokemons]);
     
-    const {error, hasMore, loading, pokemons} = useScrollPagination(pageNumber);
-    console.log('pokemons ' + pokemons.map((p) => p.id));
+    useEffect(() => {
+        setLoading(true);
+        const url = `http://localhost:3004/pokemons?_page=${pageNumber}&_limit=${LIMIT}`;
+        const cancelTokenSource = axios.CancelToken.source();
+      
+          axios.get(url, {
+            cancelToken: cancelTokenSource.token
+          })
+          .then((res) => {
+            setLoading(false);
+            setPokemonsToRender(res.data.map((p) => p));
+          })
+          .catch(() => {
+            setError(true);
+          });
+    
+        return () => cancelTokenSource.cancel();
+      }, [pageNumber]);
 
-    const observer = useRef();
-    const lastPokemonRef = useCallback((node) => {
-      if(loading) {
-        return
+      if (loading && !error) {
+        return (
+          <LoadingScreen />
+        );
       }
-      if(observer.current) {
-        observer.current.disconnect();
+
+      if (error || apiError) {
+        return (
+          <MainEmpty />
+        );
       }
-      observer.current = new IntersectionObserver((entries) => {
-        if(entries[0].isIntersecting && hasMore) {
-          console.log('visible');
-          setPageNumber((previousPageNumber) => previousPageNumber + 1);
+
+  
+      function goToNextPage (evt) {
+        evt.preventDefault();
+        if(pageNumber + 1 === Math.ceil(pokemons.length / LIMIT)) {
+          setIsLastPage(true);
         }
-      });
-      if(node) {
-        observer.current.observe(node);
+        setPageNumber((previousPageNumber) => previousPageNumber + 1);
       }
-      console.log(node);
-    }, [loading, hasMore]);
-
-
-    if (loading && !error) {
-      return (
-         <LoadingScreen />
-      );
-    }
-
-    if (error) {
-      console.log('Oops!');
-      return (
-        <MainEmpty />
-      );
-    }
-
-      const caughtClass = '';
-
-      function handlePokemonCatch () {
-        console.log('prev');
+    
+      function goToPrevPage (evt) {
+        evt.preventDefault();
+        setIsLastPage(false);
+        setPageNumber((previousPageNumber) => previousPageNumber - 1);
       }
 
     return (
@@ -88,52 +103,14 @@ const MainPage = (props) => {
       </header>
       <main className="page-main">
         <div className="wrapper__inner">
-          {/* <PokemonList pokemons={pokemons} /> */}
-          <section className="pokemon-list">
-            <h2 className="visually-hidden">Pokemon list</h2>
-            {pokemons.map((p, index) =>
-            pokemons.length === index + 1 ? 
-            <div key={uuidv4()} ref={lastPokemonRef} className={`${p.isCaught ? `pokemon-card__caught` : ``} pokemon-card`}>
-            <Link to={`/pokemon/${p.id}`} className="pokemon-card__link">
-            <img className="pokemon-card__img"
-                        src={`img/${p.id}.png`}
-                        width="100"
-                        height="40"
-                        alt={p.name}
-                      />
-            </Link>
-            <p className="pokemon-card__name">{p.name}</p>
-            {caughtClass ? `` : <button
-            className="pokemon-card__btn"
-            type="button"
-            onClick={() => handlePokemonCatch()}
-            disabled={p.isCaught}
-          >Catch</button>}
-          </div> : 
-          <div key={uuidv4()} className={`${p.isCaught ? `pokemon-card__caught` : ``} pokemon-card`}>
-            <Link to={`/pokemon/${p.id}`} className="pokemon-card__link">
-            <img className="pokemon-card__img"
-                        src={`img/${p.id}.png`}
-                        width="100"
-                        height="40"
-                        alt={p.name}
-                      />
-            </Link>
-            <p className="pokemon-card__name">{p.name}</p>
-            {caughtClass ? `` : <button
-            className="pokemon-card__btn"
-            type="button"
-            onClick={() => handlePokemonCatch()}
-            disabled={p.isCaught}
-          >Catch</button>}
-          </div>
-             )}
-          </section>
+          <PokemonList pokemons={pokemonsToRender} />
+          <Pagination isLastPage={isLastPage} pageNumber={pageNumber} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} />
         </div>
       </main>
     </div>
   );
 };
+
 
 const mapStateToProps = (state) => ({
   pokemons: state.pokemons,
@@ -150,4 +127,3 @@ const mapDispatchToProps = (dispatch) => ({
 
 export {MainPage};
 export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
-

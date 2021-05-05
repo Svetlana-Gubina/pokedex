@@ -89,4 +89,9 @@ $pale-color: #D3A588;
     &:active {
         opacity: 0.5;
     }
+
+    &:disabled {
+      opacity: 0.5;
+      background-color: $pale-color;
+    }
 }

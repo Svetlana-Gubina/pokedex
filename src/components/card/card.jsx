@@ -1,21 +1,26 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
-// import {connect} from 'react-redux';
-// import axios from 'axios';
-// import {ActionCreator} from '../../store/action';
+import {getPokemonById} from '../../utils';
 
 const Card = (props) => {
-    // const {name, id, changePokemonState, addPokemonToCaught} = props;
-    // const url = `http://localhost:3004/pokemons/${id}`;
     const {name, id, caughtClass} = props;
     const [isCaught, setIsCaught] =  useState(false);
     let specialCardClass = isCaught ? `pokemon-card__caught` : ``;
+
+    useEffect(() => {
+        if(!localStorage.getItem('my_pokemons')) {
+            return;
+        }
+        let stored = JSON.parse(localStorage.getItem('my_pokemons'));
+        if(getPokemonById(stored, id)) {
+            setIsCaught(true);
+        }
+      }, [id]);
 
 
     const handlePokemonCatch = () => {
         setIsCaught(!isCaught);
 
-        // localStorage
         if(!localStorage.getItem('my_pokemons')) {
             localStorage.setItem('my_pokemons', JSON.stringify([{
                 name, 
@@ -33,23 +38,6 @@ const Card = (props) => {
             }];
             localStorage.setItem('my_pokemons', JSON.stringify(updatedStore));
         }
-        // const cancelTokenSource = axios.CancelToken.source();
-        // axios.put(url, {
-            // name: name,
-            // isCaught: true,
-            // captureDate: new Date(Date.now())
-        //   }, {
-            // cancelToken: cancelTokenSource.token
-        //   })
-        //   .then((res) => {
-        //    console.log(res.data);
-        //   })
-        //   .catch(() => {
-            // throw new Error(`Error!`);
-        //   });
-
-        // changePokemonState(id);
-        // addPokemonToCaught(id);
     };
 
     return (
@@ -72,16 +60,5 @@ const Card = (props) => {
           </div>
     );
 };
-
-// const mapDispatchToProps = (dispatch) => ({
-    // changePokemonState(id) {
-    //   dispatch(ActionCreator.changePokemonState(id));
-    // },
-    // addPokemonToCaught(id) {
-        // dispatch(ActionCreator.addPokemonToCaught(id));
-    // },
-// });
-// export {Card};
-// export default connect(null, mapDispatchToProps)(Card);
 
 export default Card;
